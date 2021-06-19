@@ -3,7 +3,7 @@ import os
 import tempfile
 
 from things.src.server import app as flaskapp
-from things.src.dbs import setup_session
+from things.src.dbs.dbs import setup_session
 
 
 @pytest.fixture

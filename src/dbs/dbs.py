@@ -3,6 +3,9 @@ from sqlalchemy import Column, Integer, String, LargeBinary, ForeignKey, create_
 import re
 from sqlalchemy.orm import sessionmaker, relationship
 from contextlib import contextmanager
+from flask_sqlalchemy import SQLAlchemy
+
+from src.app_init import app
 
 ######################################################################################
 # The top half of this file contains helper functions for interacting with our database
@@ -10,6 +13,9 @@ from contextlib import contextmanager
 
 # TODO: We need to find a better way to store the database string
 pg_string = f'postgresql+psycopg2://pi:raspberry@192.168.2.201:5432/thingsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = pg_string
+
+db = SQLAlchemy(app)
 
 
 def get_engine(engine_string):
@@ -80,9 +86,12 @@ class Base(object):
 Base = declarative_base(cls=Base)
 
 
-class User(Base):
-    user_id = Column(Integer, primary_key=True)
-    user_name = Column(String, unique=True)
+class User(db.Model, Base):
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
+    password = Column(String(255), nullable=False)
+    email = Column(String(70), unique = True)
+    public_id = Column(String(50), unique=True)
     
 
 class Photo(Base):
@@ -108,7 +117,7 @@ class Thing(Base):
 class Inventory(Base):
     inventory_id = Column(Integer, primary_key=True)
     inventory_thing_id = Column(Integer, ForeignKey(Thing.thing_id), unique=True)
-    inventory_user_id = Column(Integer, ForeignKey(User.user_id))
+    inventory_user_id = Column(Integer, ForeignKey(User.id))
 
 
 class Group(Base):
@@ -133,7 +142,7 @@ class GroupUser(Base):
 
     group_user_id = Column(Integer, primary_key=True)
     group_id = Column(Integer, ForeignKey(Group.group_id))
-    user_id = Column(Integer, ForeignKey(User.user_id))
+    user_id = Column(Integer, ForeignKey(User.id))
     user_owner = Column(Boolean)
 
     group = relationship(Group)

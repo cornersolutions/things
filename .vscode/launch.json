@@ -8,13 +8,26 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Python: Flask",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+              "FLASK_APP": "src/server.py",
+              "FLASK_ENV": "development",
+              "FLASK_DEBUG": "0"
+            },
+            "args": ["run", "--no-debugger", "--no-reload"],
+            "jinja": true
+        },
+        {
             "name": "Python Attach",
             "type": "python",
             "request": "attach",            
             "pathMappings": [
                 {
                     "localRoot": "${workspaceFolder}/src",
-                    "remoteRoot": "/work"
+                    "remoteRoot": "/src"
                 }
             ],
             "port": 5678,

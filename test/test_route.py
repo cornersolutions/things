@@ -1,6 +1,6 @@
 import json
-from things.src.dbs import session_scope
-from things.src.dbs import Description
+from things.src.dbs.dbs import session_scope
+from things.src.dbs.dbs import Description
 
 
 def test_index(client):

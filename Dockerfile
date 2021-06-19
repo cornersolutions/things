@@ -9,12 +9,12 @@ COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 ENV FLASK_APP=server.py
 
-COPY ./src/ /work
-WORKDIR /work
+COPY ./src/ /src
+WORKDIR /src
 
 FROM base as debug
 RUN pip install ptvsd
-WORKDIR /work
+WORKDIR /src
 CMD python -m ptvsd --host 0.0.0.0 --port 5678 --wait --multiprocess -m flask run -h 0.0.0 -p 8080
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
